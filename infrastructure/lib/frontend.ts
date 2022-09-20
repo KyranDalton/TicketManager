@@ -8,7 +8,7 @@ import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 import { join } from 'path';
-import { Stage } from './app';
+import { Stage } from './config';
 
 interface FrontendStackProps extends StackProps {
     stage: Stage;
@@ -88,7 +88,7 @@ export class FrontendStack extends Stack {
         new BucketDeployment(this, `${this.stage}TicketBucketDeployment`, {
             // Use full path to assets so CodePipeline can find them
             // TODO: Update with real asset folder once it exists
-            sources: [Source.asset(join(__dirname, '../lib'))],
+            sources: [Source.asset(join(__dirname, '../../frontend/build'))],
             destinationBucket: this.websiteBucket,
             distribution: this.distribution, // Invalidates the CloudFront cache when assets change
             distributionPaths: ['/*'], // Invalidate when any file in the assets change

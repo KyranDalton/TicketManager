@@ -7,7 +7,7 @@ import { HttpUserPoolAuthorizer } from '@aws-cdk/aws-apigatewayv2-authorizers-al
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import { Construct } from 'constructs';
 import { join } from 'path';
-import { Stage } from './app';
+import { Stage } from './config';
 
 interface BackendStackProps extends StackProps {
     stage: Stage;
@@ -50,8 +50,7 @@ export class BackendStack extends Stack {
             functionName: `${this.stage}TicketHandler`,
             runtime: Runtime.NODEJS_14_X,
             // Use full path to assets so CodePipeline can find them
-            // TODO: Update with real asset folder once it exists
-            code: AssetCode.fromAsset(join(__dirname, '../lib')),
+            code: AssetCode.fromAsset(join(__dirname, '../../backend/dist')),
             handler: 'index.handler',
             timeout: Duration.seconds(5),
             memorySize: 256,

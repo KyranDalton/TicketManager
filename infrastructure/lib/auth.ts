@@ -1,7 +1,7 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { CfnUserPoolGroup, IUserPool, UserPool } from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
-import { Stage } from './app';
+import { Stage } from './config';
 
 interface AuthStackProps extends StackProps {
     stage: Stage;
