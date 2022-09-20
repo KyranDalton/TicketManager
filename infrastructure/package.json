@@ -6,7 +6,7 @@
         "clean": "rm -fr node_modules cdk.out",
         "prettier": "prettier --check '{lib,tst}/**/*.ts'",
         "prettier-fix": "prettier --write '{lib,tst}/**/*.ts'",
-        "test": "echo jest"
+        "test": "jest"
     },
     "dependencies": {
         "aws-cdk-lib": "^2.41.0",
