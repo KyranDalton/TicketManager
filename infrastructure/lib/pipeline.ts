@@ -65,9 +65,9 @@ export class PipelineStack extends Stack {
                 // Globally install cdk in the container
                 'npm install -g aws-cdk',
             ],
-            commands: ['cd infrastructure', 'npm ci', 'npm run build', 'npx cdk synth'],
+            commands: ['cd infrastructure', 'npm ci', 'npm run build', 'npx cdk synth', 'cd ..'],
             // Synth step must output to cdk.out for mutation/deployment
-            primaryOutputDirectory: '../cdk.out',
+            primaryOutputDirectory: './infrastructure/cdk.out',
         });
 
         const pipeline = new CodePipeline(this, 'TicketManagerPipeline', {
