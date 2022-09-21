@@ -15,7 +15,7 @@ const unwrappedHandler = async (
     const username = getUsername(event);
     const userIsAdmin = isAdmin(event);
 
-    const body = JSON.parse(event.body || '');
+    const body = JSON.parse(event.body || '{}');
 
     switch (path) {
         case '/createTicket':
@@ -84,9 +84,9 @@ const getUsername = (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
 };
 
 const isAdmin = (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
-    const groups = event.requestContext.authorizer.jwt.claims['cognito:groups'] as string;
+    const groups = event.requestContext.authorizer.jwt.claims['cognito:groups'] as string | undefined;
 
-    return groups.includes('Admin');
+    return groups?.includes('Admin');
 };
 
 export const handler = (event: APIGatewayProxyEventV2WithJWTAuthorizer) =>
