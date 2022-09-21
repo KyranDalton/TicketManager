@@ -19,6 +19,7 @@ import { Stage } from './config';
 interface BackendStackProps extends StackProps {
     stage: Stage;
     userPool: IUserPool;
+    domainName: string;
 }
 
 export class BackendStack extends Stack {
@@ -35,7 +36,7 @@ export class BackendStack extends Stack {
         this.ticketTable = this.createDatabase();
         this.ticketHandler = this.createLambdaHandler();
 
-        this.createAPIGateway(props.userPool);
+        this.createAPIGateway(props.userPool, props.domainName);
 
         this.ticketTable.grantReadWriteData(this.ticketHandler);
     }
@@ -68,7 +69,7 @@ export class BackendStack extends Stack {
         });
     }
 
-    private createAPIGateway(userPool: IUserPool) {
+    private createAPIGateway(userPool: IUserPool, domainName: string) {
         // Make API Gateway authenticate requests using the Cognito user pool.
         const authorizer = new HttpUserPoolAuthorizer(`${this.stage}TicketAuthorizer`, userPool);
         const integration = new HttpLambdaIntegration(`${this.stage}TicketHandlerIntegration`, this.ticketHandler);
@@ -80,7 +81,8 @@ export class BackendStack extends Stack {
             corsPreflight: {
                 allowCredentials: true,
                 allowHeaders: ['*'],
-                allowOrigins: ['http://localhost:3000'],
+                // For Beta allow localhost origin to make development easier
+                allowOrigins: this.stage === 'Beta' ? ['http://localhost:3000', domainName] : [domainName],
                 allowMethods: [CorsHttpMethod.ANY],
             },
         });

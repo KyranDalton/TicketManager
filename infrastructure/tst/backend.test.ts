@@ -11,6 +11,7 @@ describe('BackendStack', () => {
         const backendStack = new BackendStack(app, 'TestBackendStack', {
             stage: 'Beta',
             userPool: authStack.userPool,
+            domainName: 'test.com',
         });
 
         const template = Template.fromStack(backendStack);
