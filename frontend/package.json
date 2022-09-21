@@ -1,11 +1,9 @@
 {
   "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
-  },
-  "devDependencies": {
+    "@aws-amplify/ui-react": "^3.5.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,18 +11,22 @@
     "@types/node": "^16.11.59",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
-    "jest": "^27.5.1",
-    "prettier": "2.7.1",
-    "typescript": "^4.8.3"
+    "aws-amplify": "^4.3.36",
+    "prettier": "^2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.8.3",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && npm run prettier",
-    "clean": "rm -fr build node_modules",
-    "test": "react-scripts test",
+    "build": "react-scripts build && CI=1 npm run test && npm run prettier",
+    "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
-    "prettier": "prettier --check '{src,tst}/**/*.ts?(x)'",
-    "prettier-fix": "prettier --write '{src,tst}/**/*.ts?(x)'"
+    "clean": "rm -fr build node_modules",
+    "prettier": "prettier --check 'src/**/*.ts?(x)'",
+    "prettier-fix": "prettier --write 'src/**/*.ts?(x)'"
   },
   "prettier": {
     "printWidth": 120,
@@ -33,16 +35,10 @@
     "semi": true,
     "singleQuote": true
   },
-  "jest": {
-    "preset": "ts-jest",
-    "verbose": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coverageReporters": [
-      "cobertura",
-      "json",
-      "text"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
     ]
   },
   "browserslist": {
