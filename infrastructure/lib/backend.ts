@@ -73,6 +73,7 @@ export class BackendStack extends Stack {
         // Make API Gateway authenticate requests using the Cognito user pool.
         const authorizer = new HttpUserPoolAuthorizer(`${this.stage}TicketAuthorizer`, userPool);
         const integration = new HttpLambdaIntegration(`${this.stage}TicketHandlerIntegration`, this.ticketHandler);
+        const origin = `https://${domainName}`;
 
         const api = new HttpApi(this, `${this.stage}TicketAPI`, {
             apiName: `${this.stage}TicketAPI`,
@@ -82,7 +83,7 @@ export class BackendStack extends Stack {
                 allowCredentials: true,
                 allowHeaders: ['*'],
                 // For Beta allow localhost origin to make development easier
-                allowOrigins: this.stage === 'Beta' ? ['http://localhost:3000', domainName] : [domainName],
+                allowOrigins: this.stage === 'Beta' ? ['http://localhost:3000', origin] : [origin],
                 allowMethods: [CorsHttpMethod.ANY],
             },
         });
