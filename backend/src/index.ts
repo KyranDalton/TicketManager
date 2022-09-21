@@ -10,6 +10,12 @@ const unwrappedHandler = async (
     event: APIGatewayProxyEventV2WithJWTAuthorizer,
     store: TicketManagerStore,
 ): Promise<APIGatewayProxyResultV2> => {
+    // OPTIONS requests need to succeed so that APIGW
+    // can send the CORS options back to the browser
+    if (event.requestContext.http.method === 'OPTIONS') {
+        return { statusCode: 200 };
+    }
+
     const path = event.rawPath;
 
     const username = getUsername(event);

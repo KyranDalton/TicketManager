@@ -31,6 +31,21 @@ describe('unwrappedHandler', () => {
         reset(STORE_MOCK);
     });
 
+    it('returns OPTIONS requests early for CORS', async () => {
+        const event: APIGatewayProxyEventV2WithJWTAuthorizer = {
+            ...createEvent('/doesNotMatter', {}),
+            requestContext: {
+                http: {
+                    method: 'OPTIONS',
+                },
+            } as any,
+        };
+
+        const response = await unwrappedHandler(event, instance(STORE_MOCK));
+
+        expect(response).toEqual({ statusCode: 200 });
+    });
+
     it('returns failure for invalid API', async () => {
         const event = createEvent('/someInvalidAPI', {});
         const response = await unwrappedHandler(event, instance(STORE_MOCK));
@@ -225,6 +240,9 @@ const createEvent = (
                         'cognito:groups': groups || '',
                     },
                 },
+            },
+            http: {
+                method: 'POST',
             },
         } as any,
         body: JSON.stringify(body),
