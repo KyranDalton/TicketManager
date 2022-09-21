@@ -2,7 +2,14 @@ import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { IUserPool } from 'aws-cdk-lib/aws-cognito';
 import { AttributeType, BillingMode, ITable, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AssetCode, Function, IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
-import { HttpApi } from '@aws-cdk/aws-apigatewayv2-alpha';
+import {
+    CorsHttpMethod,
+    HttpApi,
+    HttpMethod,
+    HttpNoneAuthorizer,
+    HttpRoute,
+    HttpRouteKey,
+} from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpUserPoolAuthorizer } from '@aws-cdk/aws-apigatewayv2-authorizers-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import { Construct } from 'constructs';
@@ -66,10 +73,28 @@ export class BackendStack extends Stack {
         const authorizer = new HttpUserPoolAuthorizer(`${this.stage}TicketAuthorizer`, userPool);
         const integration = new HttpLambdaIntegration(`${this.stage}TicketHandlerIntegration`, this.ticketHandler);
 
-        return new HttpApi(this, `${this.stage}TicketAPI`, {
+        const api = new HttpApi(this, `${this.stage}TicketAPI`, {
             apiName: `${this.stage}TicketAPI`,
             defaultAuthorizer: authorizer,
             defaultIntegration: integration,
+            corsPreflight: {
+                allowCredentials: true,
+                allowHeaders: ['*'],
+                allowOrigins: ['http://localhost:3000'],
+                allowMethods: [CorsHttpMethod.ANY],
+            },
         });
+
+        // Add a custom route for OPTIONS requests without auth so
+        // the CORS preflight request made by the browser can succeed.
+        // https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html
+        new HttpRoute(this, `${this.stage}OptionsRoute`, {
+            integration,
+            httpApi: api,
+            routeKey: HttpRouteKey.with('/{proxy+}', HttpMethod.OPTIONS),
+            authorizer: new HttpNoneAuthorizer(),
+        });
+
+        return api;
     }
 }
