@@ -1,18 +1,17 @@
-import { Authenticator, Button } from '@aws-amplify/ui-react';
+import React from 'react';
+import { Authenticator } from '@aws-amplify/ui-react';
+import { Header } from './components/Header';
 
 export function App() {
     return (
-        <>
-            <h1>Ticket Manager</h1>
-            <Authenticator hideSignUp>
-                {({ signOut, user }) => (
-                    <main>
-                        <h3>Hello {user?.username} </h3>
-                        <Button onClick={signOut}>Sign out</Button>
-                    </main>
-                )}
-            </Authenticator>
-        </>
+        <Authenticator hideSignUp>
+            {({ signOut, user }) => (
+                <>
+                    <Header signOut={signOut} username={user?.username}></Header>
+                    <p>Main content</p>
+                </>
+            )}
+        </Authenticator>
     );
 }
 
