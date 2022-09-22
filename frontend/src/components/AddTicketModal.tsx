@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { Button, Divider, Flex, Heading, SelectField, TextAreaField, TextField } from '@aws-amplify/ui-react';
-import { TicketSeverity } from '../types';
+import { Ticket, TicketSeverity } from '../types';
+import { createTicket as createTicketCall, getAllTickets } from '../client';
 
 interface AddTicketModalProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    setTickets: (tickets: Ticket[]) => void;
 }
 
-export function AddTicketModal({ isOpen, setIsOpen }: AddTicketModalProps) {
+export function AddTicketModal({ isOpen, setIsOpen, setTickets }: AddTicketModalProps) {
     const [title, setTitle] = useState<string | undefined>();
     const [hasTitleError, setHasTitleError] = useState(false);
     const [description, setDescription] = useState<string | undefined>();
@@ -48,12 +50,16 @@ export function AddTicketModal({ isOpen, setIsOpen }: AddTicketModalProps) {
             return;
         }
 
-        // TODO: Make API call for real
         const createTicket = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            console.log(title);
-            console.log(description);
-            console.log(severity);
+            const response = await createTicketCall({ title, description, severity });
+
+            if (!response.ticketId) {
+                alert('Failed to create ticket... please try again');
+            }
+
+            const tickets = await getAllTickets();
+            setTickets(tickets);
+
             clearAndClose();
         };
         createTicket();

@@ -5,7 +5,7 @@ import { AddTicketModal } from '../components/AddTicketModal';
 
 describe('AddTicketModal', () => {
     it('renders the correct components when modal is open', () => {
-        render(<AddTicketModal isOpen={true} setIsOpen={(_) => {}} />);
+        render(<AddTicketModal isOpen={true} setIsOpen={(_) => {}} setTickets={() => {}} />);
 
         const header = screen.getByText(/Create New Ticket/i);
         const titleBox = screen.getByText(/Title/i);
@@ -23,7 +23,7 @@ describe('AddTicketModal', () => {
     });
 
     it('renders the correct components when modal is closed', () => {
-        render(<AddTicketModal isOpen={false} setIsOpen={(_) => {}} />);
+        render(<AddTicketModal isOpen={false} setIsOpen={(_) => {}} setTickets={() => {}} />);
 
         expect(() => screen.getByText(/Create New Ticket/i)).toThrowError();
     });

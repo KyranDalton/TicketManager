@@ -9,7 +9,7 @@ export interface Ticket {
     severity: TicketSeverity;
     requester: string;
     status: TicketStatus;
-    createDate: Date;
+    createDate: string;
     lastModifiedBy: string;
-    lastModifiedDate: Date;
+    lastModifiedDate: string;
 }

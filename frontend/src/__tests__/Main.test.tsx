@@ -10,7 +10,7 @@ const TITLE = 'Test Ticket Title';
 const DESCRIPTION = 'Some ticket description';
 const SEVERITY = 5;
 const STATUS = 'ASSIGNED';
-const DATE = new Date('09/20/2022');
+const DATE = new Date('09/20/2022').toUTCString();
 
 const TICKET: Ticket = {
     ticketId: UID,
@@ -26,7 +26,7 @@ const TICKET: Ticket = {
 
 describe('Header', () => {
     it('renders tickets and add button when there are tickets', () => {
-        render(<Main tickets={[TICKET]} isAdmin={false} />);
+        render(<Main tickets={[TICKET]} isAdmin={false} setTickets={() => {}} />);
 
         const ticketTitle = screen.getByText(TITLE);
         const button = screen.getByText(/Create New Ticket/i);
@@ -36,7 +36,7 @@ describe('Header', () => {
     });
 
     it('renders message and add button when there are no tickets', () => {
-        render(<Main tickets={[]} isAdmin={false} />);
+        render(<Main tickets={[]} isAdmin={false} setTickets={() => {}} />);
 
         const message = screen.getByText(/There are currently no tickets/i);
         const button = screen.getByText(/Create New Ticket/i);

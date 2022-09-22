@@ -6,9 +6,10 @@ import { EditTicketModal } from './EditTicketModal';
 interface TicketProps {
     ticketProps: TicketType;
     isAdmin: boolean;
+    setTickets: (ticket: TicketType[]) => void;
 }
 
-export function Ticket({ ticketProps, isAdmin }: TicketProps) {
+export function Ticket({ ticketProps, isAdmin, setTickets }: TicketProps) {
     const { title, description, severity, requester, status, createDate } = ticketProps;
 
     const [showEditModal, setShowEditModal] = useState(false);
@@ -38,15 +39,20 @@ export function Ticket({ ticketProps, isAdmin }: TicketProps) {
                         <Text>{description}</Text>
                     </Flex>
                     <Flex columnStart={1} columnEnd={1} rowStart={3} rowEnd={4} paddingTop="1rem">
-                        <Text fontStyle="italic">Request by: {requester}</Text>
+                        <Text fontStyle="italic">Requested by: {requester}</Text>
                         <Divider orientation="vertical" />
                         <Text fontStyle="italic">Status: {status}</Text>
                         <Divider orientation="vertical" />
-                        <Text fontStyle="italic">Created on: {createDate.toUTCString()}</Text>
+                        <Text fontStyle="italic">Created on: {createDate}</Text>
                     </Flex>
                 </Grid>
             </Card>
-            <EditTicketModal ticket={ticketProps} isOpen={showEditModal} setIsOpen={setShowEditModal} />
+            <EditTicketModal
+                ticket={ticketProps}
+                isOpen={showEditModal}
+                setIsOpen={setShowEditModal}
+                setTickets={setTickets}
+            />
         </>
     );
 }

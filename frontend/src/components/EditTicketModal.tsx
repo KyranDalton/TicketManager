@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { Button, Divider, Flex, Heading, SelectField, TextAreaField, TextField } from '@aws-amplify/ui-react';
 import { Ticket, TicketSeverity, TicketStatus } from '../types';
+import { deleteTicket as deleteTicketCall, editTicket, getAllTickets } from '../client';
 
 interface EditTicketModalProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     ticket: Ticket;
+    setTickets: (tickets: Ticket[]) => void;
 }
 
-export function EditTicketModal({ isOpen, setIsOpen, ticket }: EditTicketModalProps) {
+export function EditTicketModal({ isOpen, setIsOpen, ticket, setTickets }: EditTicketModalProps) {
     const [title, setTitle] = useState(ticket.title);
     const [hasTitleError, setHasTitleError] = useState(false);
     const [description, setDescription] = useState(ticket.description);
@@ -36,9 +38,12 @@ export function EditTicketModal({ isOpen, setIsOpen, ticket }: EditTicketModalPr
     function onDelete() {
         setIsLoading(true);
 
-        // TODO: Make API call for real
         const deleteTicket = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            await deleteTicketCall(ticket.ticketId);
+
+            const tickets = await getAllTickets();
+            setTickets(tickets);
+
             clearAndClose();
         };
         deleteTicket();
@@ -60,11 +65,15 @@ export function EditTicketModal({ isOpen, setIsOpen, ticket }: EditTicketModalPr
 
         // TODO: Make API call for real
         const updateTicket = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            console.log(title);
-            console.log(description);
-            console.log(severity);
-            console.log(status);
+            const response = await editTicket({ ticketId: ticket.ticketId, title, description, severity, status });
+
+            if (!response.ticketId) {
+                alert('Failed to update ticket');
+            }
+
+            const tickets = await getAllTickets();
+            setTickets(tickets);
+
             clearAndClose();
         };
         updateTicket();

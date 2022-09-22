@@ -10,7 +10,7 @@ const TITLE = 'Test Ticket Title';
 const DESCRIPTION = 'Some ticket description';
 const SEVERITY = 5;
 const STATUS = 'ASSIGNED';
-const DATE = new Date('09/20/2022');
+const DATE = new Date('09/20/2022').toUTCString();
 
 const TICKET: Ticket = {
     ticketId: UID,
@@ -26,7 +26,7 @@ const TICKET: Ticket = {
 
 describe('EditTicketModal', () => {
     it('renders the correct components when modal is open', () => {
-        render(<EditTicketModal ticket={TICKET} isOpen={true} setIsOpen={(_) => {}} />);
+        render(<EditTicketModal ticket={TICKET} isOpen={true} setIsOpen={(_) => {}} setTickets={() => {}} />);
 
         const header = screen.getByText(/Edit Ticket/i);
         const deleteButton = screen.getByText(/Delete/i);
@@ -40,7 +40,7 @@ describe('EditTicketModal', () => {
     });
 
     it('renders the correct components when modal is closed', () => {
-        render(<EditTicketModal ticket={TICKET} isOpen={false} setIsOpen={(_) => {}} />);
+        render(<EditTicketModal ticket={TICKET} isOpen={false} setIsOpen={(_) => {}} setTickets={() => {}} />);
 
         expect(() => screen.getByText(/Edit Ticket/i)).toThrowError();
     });

@@ -9,7 +9,7 @@ const DESCRIPTION = 'Test Description';
 const USER = 'kyran';
 const SEVERITY = 5;
 const STATUS = 'ASSIGNED';
-const DATE = new Date('09/20/2022');
+const DATE = new Date('09/20/2022').toUTCString();
 
 describe('Ticket', () => {
     it('renders the correct information for admins', () => {
@@ -27,6 +27,7 @@ describe('Ticket', () => {
                     lastModifiedDate: DATE,
                 }}
                 isAdmin={true}
+                setTickets={() => {}}
             />,
         );
 
@@ -35,7 +36,7 @@ describe('Ticket', () => {
         const severity = screen.getByText(SEVERITY.toString());
         const requester = screen.getByText(new RegExp(USER));
         const status = screen.getByText(new RegExp(STATUS));
-        const createdOn = screen.getByText(new RegExp(DATE.toUTCString()));
+        const createdOn = screen.getByText(new RegExp(DATE));
         const editButton = screen.getByText(/Edit Ticket/);
 
         expect(title).toBeInTheDocument();
@@ -65,6 +66,7 @@ describe('Ticket', () => {
                     lastModifiedDate: DATE,
                 }}
                 isAdmin={false}
+                setTickets={() => {}}
             />,
         );
 
@@ -73,7 +75,7 @@ describe('Ticket', () => {
         const severity = screen.getByText(SEVERITY.toString());
         const requester = screen.getByText(new RegExp(USER));
         const status = screen.getByText(new RegExp(STATUS));
-        const createdOn = screen.getByText(new RegExp(DATE.toUTCString()));
+        const createdOn = screen.getByText(new RegExp(DATE));
         const editButton = screen.getByText(/Edit Ticket/);
 
         expect(title).toBeInTheDocument();
