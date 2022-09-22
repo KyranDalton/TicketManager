@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Badge, Card, Grid, Heading, Text, Flex, Divider, Button } from '@aws-amplify/ui-react';
 import { Ticket as TicketType } from '../types';
+import { EditTicketModal } from './EditTicketModal';
 
 interface TicketProps {
     ticketProps: TicketType;
@@ -45,6 +46,7 @@ export function Ticket({ ticketProps, isAdmin }: TicketProps) {
                     </Flex>
                 </Grid>
             </Card>
+            <EditTicketModal ticket={ticketProps} isOpen={showEditModal} setIsOpen={setShowEditModal} />
         </>
     );
 }
