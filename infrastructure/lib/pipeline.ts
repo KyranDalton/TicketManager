@@ -92,10 +92,12 @@ export class PipelineStack extends Stack {
         });
 
         const betaHealthCheck = new ShellStep('BetaTicketManagerHealthCheck', {
+            installCommands: ['apt-get install iputils-ping -y'],
             commands: [`ping -c ${BETA_DOMAIN_NAME}`],
         });
 
         const failHealthCheck = new ShellStep('BetaTicketManagerFailHealthCheck', {
+            installCommands: ['apt-get install iputils-ping -y'],
             commands: [`ping -c fail.${BETA_DOMAIN_NAME}`],
         });
 
