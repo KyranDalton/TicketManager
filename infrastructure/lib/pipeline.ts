@@ -1,5 +1,5 @@
 import { Stack, StackProps, Stage as CDKStage, StageProps } from 'aws-cdk-lib';
-import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
+import { CodeBuildStep, CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 import { AuthStack } from './auth';
 import { BackendStack } from './backend';
@@ -91,7 +91,15 @@ export class PipelineStack extends Stack {
             domainName: PROD_DOMAIN_NAME,
         });
 
-        pipeline.addStage(betaStage);
+        const betaHealthCheck = new ShellStep('BetaTicketManagerHealthCheck', {
+            commands: [`ping -c ${BETA_DOMAIN_NAME}`],
+        });
+
+        const failHealthCheck = new ShellStep('BetaTicketManagerFailHealthCheck', {
+            commands: [`ping -c fail.${BETA_DOMAIN_NAME}`],
+        });
+
+        pipeline.addStage(betaStage).addPost(betaHealthCheck, failHealthCheck);
         pipeline.addStage(prodStage);
     }
 }
