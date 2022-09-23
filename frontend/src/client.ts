@@ -50,5 +50,5 @@ const getToken = async () => {
 export const userIsAdmin = async () => {
     const userSession = await Auth.currentSession();
     const groups = userSession.getAccessToken().payload['cognito:groups'] as string[] | undefined;
-    return JSON.stringify(groups).includes('Admin');
+    return JSON.stringify(groups || []).includes('Admin');
 };
