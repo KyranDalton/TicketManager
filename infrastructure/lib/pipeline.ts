@@ -91,17 +91,17 @@ export class PipelineStack extends Stack {
             domainName: PROD_DOMAIN_NAME,
         });
 
-        const betaHealthCheck = new ShellStep('BetaTicketManagerHealthCheck', {
-            installCommands: ['apt-get update', 'apt-get install iputils-ping -y'],
-            commands: [`ping -c 10 ${BETA_DOMAIN_NAME}`],
-        });
+        const betaHealthCheck = this.getHealthChecker('Beta', BETA_DOMAIN_NAME);
+        const prodHealthCheck = this.getHealthChecker('Prod', PROD_DOMAIN_NAME);
 
-        const failHealthCheck = new ShellStep('BetaTicketManagerFailHealthCheck', {
-            installCommands: ['apt-get update', 'apt-get install iputils-ping -y'],
-            commands: [`ping -c 10 fail.${BETA_DOMAIN_NAME}`],
-        });
+        pipeline.addStage(betaStage).addPost(betaHealthCheck);
+        pipeline.addStage(prodStage).addPost(prodHealthCheck);
+    }
 
-        pipeline.addStage(betaStage).addPost(betaHealthCheck, failHealthCheck);
-        pipeline.addStage(prodStage);
+    private getHealthChecker(stage: Stage, domain: string) {
+        return new ShellStep(`${stage}TicketManagerHealthCheck`, {
+            installCommands: ['apt-get update', 'apt-get install iputils-ping -y'],
+            commands: [`ping -c 10 ${domain}`],
+        });
     }
 }
